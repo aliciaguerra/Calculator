@@ -1,0 +1,139 @@
+The Program:
+
+For this assignment, you will develop the back end of a calculator application. The GUI (graphical user interface) has been provided by your instructor. The application will require a stack and a queue which you will write. You must use your LinearList class from assignment #2 to create the Stack and Queue.
+
+The application program will accept infix expressions as input, convert the infix expression to postfix, evaluate the expression, and display the result in the calculator GUI.
+
+All numbers are of type double, not int.
+
+Your project will consist of the following six files, of which you must write four:
+
+Calculator.java     The graphical user iterface (provided).
+LinearListADT.java    The linear list interface, from project #2. (provided)
+LinearList.java    The linked list implementation of the LinearListADT interface, from project #2.
+Stack.java    The stack, which uses the LinearList implmentation.
+Queue.java    The queue, which uses the LinearList implmentation.
+ExpressionEvaluator.java    The back end program that contains the logic needed to evaluate the expression and update the GUI.
+The LinearListADT interface, the LinearList, the Stack and the Queue must be in a package named data_structures.  The application portion of the program will not be in the package.   In your working directory, you must create a subdirectory named data_structures/ and these four files should be in that subdirectory.  Your application classes, Calculator and ExpressionEvaluator go in the level above data_structures/, and they are NOT in any package.
+
+The Stack Methods:
+
+package data_structures;
+
+import java.util.Iterator;
+
+public class Stack<E> implements Iterable<E> {
+    private LinearListADT<E> list;
+    
+    public Stack() {}                      
+    public void push(E obj) {}
+    public E pop() {}        
+    public int size() {}
+    public boolean isEmpty() {}
+    public E peek() {}
+    public boolean contains(E obj) {}   
+    public void makeEmpty() {}
+    public Iterator<E> iterator() {}                   
+}    
+The Queue Methods:
+
+package data_structures;
+
+import java.util.Iterator;
+
+public class Queue<E> implements Iterable<E> {
+    private LinearListADT<E> list;
+    
+    public Queue() {}
+    public void enqueue(E obj) {}   
+    public E dequeue() {}   
+    public int size() {}
+    public boolean isEmpty() {}
+    public E peek() {}
+    public boolean contains(E obj) {}
+    public void makeEmpty() {} 
+    public Iterator<E> iterator() {}
+    }
+Both your Stack and your Queue must use the LinearList class from project #2.
+
+ExpressionEvaluator
+
+Your ExpressionEvaluator class will interact with the Calculator GUI. When the user presses the "=" key on the calculator, that class will invoke a method in your ExpressionEvaluator class which must be named
+
+public String processInput(String s)
+This method will pass as a parameter the infix expression entered by the user. The expression consists of space separated tokens which are: numbers, parenthesis and operators (+-*/^). Your method will parse this expression and turn the infix expression into a postfix expression, solve the expression, and return the result as a String, which the calculator will display. If the expression is invalid or any other error occurs, your method should return the string "ERROR".
+
+If you use the StringTokenizer class, the Enumeration method will give you one token at a time, which simplifies the code.
+
+The Calculator.java class contains the main method. To run the program, you will type:
+
+java Calculator
+at the command prompt. The Calculator class will instantiate an instance of your ExpressionEvaluator class.
+Some Background:
+
+Infix expressions are the type we normally use in arithmetic. Infix expressions take the form of two operands separated by an operator. This is the form 3 + 4. Operands may be numbers, but may also be expressions themselves. Example: (1 * 2) + (3 * 4). In this case operand #1 is (1 * 2), operand #2 is (3 * 4) and the operator is +. Evaluating an infix expression is quite difficult to do with a computer program. One solution is to convert an infix expression into a postfix expression. A postfix expression takes the form of two operands followed by the operator. Thus, the infix expression (1 * 2) + (3 * 4) becomes 1 2 * 3 4 * +. The big benefit here is that parenthesis are no longer required; the statement is unambiguous without them. This greatly simplifies evaluation with a computer.
+
+The use of stacks and queues simplifies the algorithm's needed for conversion and evaluation. For your application, you must use your Stack and Queue classes. Your program will handle only the five operators: + - * / ^
+
+An algorithm for converting from infix to postfix:
+
+for each token in an infix expression do {
+    if ( the token is "(" )
+        push the "(" onto the stack
+    if ( the token is ")" )
+        do ( until the "(" is reached )
+            pop an operator off the stack and enqueue it in the queue
+    if the token is an operator {
+        while(the stack is not empty 
+            AND the top of the stack is not a "(" 
+            AND the precedence of the token on the top of the stack >= current token) {
+                    pop the token on the stack and enqueue it
+            } // end while
+        push current token onto the stack
+        } // end if token is an operator
+    if ( token is a number )
+        enqueue token
+    } // end for each token do
+
+while ( stack not empty )
+    pop token off stack and enqueue it
+// The queue now has the postfix expression
+An algorithm for evaluating a postfix expression:
+
+while ( queue not empty ) {
+    if ( token is a number )
+        push onto the stack
+    else if( token is an operator ) {
+        pop the top two tokens off the stack
+        perform token_from_stack2 operator token_from_stack1
+        push results onto the stack
+        }
+    } // end while queue not empty
+//the stack now has a single entry, the answer
+answer = stack.pop();
+Additional Details:
+
+All numbers are of type double.
+Your project must consist of only the six files specified, no additional source code files are permitted.
+The application does not support unary operators. i.e. 2 + (-3) is not a valid expression.
+The class names, and signatures of all public methods must exactly match the above specifications.
+You may have as many private methods, variables, and inner classes as you need.
+For the LinearList, Stack, and Queue you may import only java.util.Iterator, and java.util.NoSuchElementException.
+For your application program ExpressionEvaluator.java, you may import only java.util.StringTokenizer and data_structures.
+You may use any class in java.lang. No import statement is required for the java.lang package. For your application program, you may find the StringTokenizer class helpful. Under no circumstances may you use anything in java.util not explicitly allowed in these specifications.
+Each source code file must begin with comments, which include your name and class account number. Each method should begin with a comment which describes the action of the method, any return value, and handling of error conditions, if any.
+Project Submission:
+
+Your files go in handin/prog3/ for this assignment. Be sure to read carefully the Program Submissions page. It contains information about submission of projects and is considered an official part of this assignment.
+
+You will copy four files into the handin/prog3/ subdirectory for submission: LinearList.java, Stack.java, Queue.java, and ExpressionEvaluator.java I will use my version of LinearListADT.java and Calculator.java for compiling your project. Note that your project will not run in the handin/prog3/ subdirectory. You must not create a data_structures/ directory in your handin/prog3 subdirectory. All files submitted for grading must be in handin/prog3 and not in any subdirectories or folders.
+
+On the day the assignment is due, you should turn in hard copy of ONLY the Stack.java, Queue.java, and ExpressionEvaluator.java file in class.
+
+Late Programs:
+
+Late programs will be accepted with a penalty of 5% per day for seven days after the due date.
+
+Cheating Policy:
+
+There is a zero tolerance policy on cheating in this course. You are expected to complete all programming assignments on your own. Collaboration with other students in the course is not permitted. You may discuss ideas or solutions in general terms with other students, but you must not exchange code. (Remember that you can get help from me and the TAs.) I will examine your code carefully. Anyone caught cheating on a programming assignment or on an exam will receive an "F" in the course, and a referral to Judicial Procedures.
